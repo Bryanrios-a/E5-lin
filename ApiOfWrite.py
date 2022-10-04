@@ -31,7 +31,7 @@ if city == '':
     city = 'Beijing'
 access_token_list=['wangziyingwen']*int(app_num)
 
-#微软refresh_token获取1
+#微软refresh_token获取
 def getmstoken(ms_token,appnum):
     headers={'Content-Type':'application/x-www-form-urlencoded'
             }
@@ -51,7 +51,7 @@ def getmstoken(ms_token,appnum):
     access_token = jsontxt['access_token']
     return access_token
 
-#api延时1
+#api延时
 def apiDelay():
     if config['api_delay'][0] == 1:
         time.sleep(random.randint(config['api_delay'][1],config['api_delay'][2]))
