@@ -32,7 +32,7 @@ def getpublickey(Auth,geturl):
     key_id = jsontxt['key_id']
     return public_key
 
-#微软refresh_token获取1
+#微软refresh_token获取11
 def getmstoken(ms_token,appnum):
     headers={'Content-Type':'application/x-www-form-urlencoded'
             }
