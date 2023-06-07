@@ -1,4 +1,4 @@
-#每周1，4，6自动更新refresh_token1
+#每周1，4，6自动更新refresh_token12
 name: Update Token
 
 on: 
