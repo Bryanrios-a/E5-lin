@@ -10,7 +10,7 @@ emailaddress=os.getenv('EMAIL')
 app_num=os.getenv('APP_NUM')
 ###########################
 # config选项说明
-# 0：关闭  ， 1：开启
+# 0：关闭  ， 1：开启 121
 # allstart：是否全api开启调用，关闭默认随机抽取调用。默认0关闭
 # rounds: 轮数，即每次启动跑几轮。
 # rounds_delay: 是否开启每轮之间的随机延时，后面两参数代表延时的区间。默认0关闭q
