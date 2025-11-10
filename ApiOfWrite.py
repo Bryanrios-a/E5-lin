@@ -182,7 +182,50 @@ for a in range(1, int(app_num)+1):
 print('')    
 #获取天气
 headers={'Accept-Language': 'zh-CN'}
-weather=req.get(r'http://wttr.in/'+city+r'?format=4&?m',headers=headers).text
+#weather=req.get(r'http://wttr.in/'+city+r'?format=4&?m',headers=headers).text
+import time
+import requests
+from urllib3.util import Retry
+from requests.adapters import HTTPAdapter
+
+def get_weather(city: str, session: requests.Session) -> str:
+    base = "https://wttr.in/"
+    # 正确的查询参数：format=4&m   （m=公制单位）
+    url = f"{base}{city}?format=4&m"
+    try:
+        resp = session.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.text.strip()
+    except requests.exceptions.RequestException as e:
+        # 优雅降级，别让脚本崩
+        return f"[天气获取失败] {city}: {e.__class__.__name__}"
+
+# —— 在主逻辑初始化一个带重试的 Session ——
+session = requests.Session()
+# 适当的 UA，避免被某些服务直接拒绝
+session.headers.update({
+    "User-Agent": "Mozilla/5.0 (compatible; E5-own/1.0; +https://github.com/)",
+    "Accept": "*/*",
+})
+
+retry = Retry(
+    total=5,                # 总重试次数
+    connect=5,              # 连接错误重试
+    read=5,                 # 读错误重试
+    backoff_factor=0.8,     # 指数回退：0.8, 1.6, 3.2, ...
+    status_forcelist=(429, 500, 502, 503, 504),
+    allowed_methods=("HEAD","GET","OPTIONS"),
+    raise_on_status=False,
+)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount("https://", adapter)
+session.mount("http://", adapter)
+
+# 如需对远端温柔点，可在多城市轮询时做轻微 sleep
+# time.sleep(0.5)
+
+# —— 调用获取天气 ——
+weather = get_weather(city, session)
 
 #实际运行
 for a in range(1, int(app_num)+1):
